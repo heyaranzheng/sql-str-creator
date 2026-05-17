@@ -1,11 +1,11 @@
 [package]
-name = "table-creator-macro2"
-version = "0.2.5"
+name = "sql-str-creator"
+version = "0.0.1"
 authors = ["Aran Z <heyaranzheng@hotmail.com>"]
 edition = "2024"
 license = "MIT"  
 repository = "https://github.com/heyaranzheng/table-creator-macro2"
-keywords = ["sql", "proc-macro", "database"]
+keywords = ["sql string", "proc-macro", "database"]
 description = "A simple macro to generate a specific sql when we have a structure."
 
 [lib]
