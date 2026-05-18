@@ -20,5 +20,7 @@ proc-macro2 = "1.0"
 
 [features]
 default = ["only-for-sqlite"]
+#default = ["only-for-postgres"]
+
 only-for-postgres = []
 only-for-sqlite = []

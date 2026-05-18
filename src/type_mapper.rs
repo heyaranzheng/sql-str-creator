@@ -8,6 +8,9 @@ use quote::quote;
 /// Map rust type to corresponding sql type, according to your database system.
 pub trait TypeMapper {
     fn map_type(self: &Self, ty: &Type) -> &'static str;
+    fn map_type_all (&self, tys: &Vec<Type>) -> Vec<String> {
+        tys.iter().map(|ty| self.map_type(ty).to_string()).collect::<Vec<String>>()
+    }
 }
 
 
@@ -71,26 +74,17 @@ impl TypeMapper for SqliteTypeMapper {
             _ => "TEXT",
         }
     }
-}
-
-#[cfg(feature = "only-for-postgres")]
-pub fn get_mapper() -> impl TypeMapper {
-    PostgresTypeMapper
-}
 
 
-/// This is the default mapper.
-#[cfg(feature = "only-for-sqlite")]
-pub fn get_mapper() -> impl TypeMapper {
-    SqliteTypeMapper
 }
+
 
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use syn::parse_str;
-    use crate::rust_type_mapper::TypeMapper;
+    use crate::type_mapper::TypeMapper;
 
     #[test]
     fn test_type_mapper() {
