@@ -1,12 +1,12 @@
 [package]
-name = "sql-str-creator"
+name = "gen-sql-statement"
 version = "0.0.1"
 authors = ["Aran Z <heyaranzheng@hotmail.com>"]
 edition = "2024"
 license = "MIT"  
-repository = "https://github.com/heyaranzheng/table-creator-macro2"
-keywords = ["sql string", "proc-macro", "database"]
-description = "A simple macro to generate a specific sql when we have a structure."
+repository = "https://github.com/heyaranzheng/gen-sql-statement"
+keywords = ["sql statement", "proc-macro", "database"]
+description = "A simple macro to generate a specific SQL statement when we have a structure. Support SQLite first"
 
 [lib]
 proc-macro = true

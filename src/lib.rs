@@ -9,7 +9,6 @@ use syn::{ Data, DeriveInput, Field, Fields, parse_macro_input, Type };
 
 use field_processor::{FieldInfo, FieldProcessor};
 use type_mapper::{TypeMapper};
-use database_config::{get_mapper};
 
 use gen_sql_str::{
     gen_create_table_sql_str::create_table_sql_str, 
@@ -23,9 +22,9 @@ use gen_sql_str::{
 /// 
 /// # Example
 /// ```rust
-/// use sql_str_creator::CreateTable;
+/// use sql_str_creator::SqlStatement;
 /// 
-/// #[derive(CreateTable)]
+/// #[derive(SqlStatement)]
 /// struct User {
 ///     #[primary_key]
 ///     id: i32,
@@ -48,7 +47,7 @@ use gen_sql_str::{
 
 
 /// The entry funtion of derive macro
-#[proc_macro_derive(CreateTable, attributes(primary_key, ignore))]
+#[proc_macro_derive(SqlStatement, attributes(primary_key, ignore))]
 pub fn derive_create_table(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     //get the token stream, and parse it into a DeriveInput struct.
     let input = parse_macro_input!(input as DeriveInput);
@@ -56,28 +55,41 @@ pub fn derive_create_table(input: proc_macro::TokenStream) -> proc_macro::TokenS
     
     //the ident we used to expand the macro
     let struct_ident = &input.ident;
+
+    //get the generic parameters of the struct
+    let generics = &input.generics;
+    let (impl_generics, ty_generics, where_clausre) 
+        = generics.split_for_impl();
     
     //prepare the arguments for the create_table_sql_str function
     let column_list = field_processor.get_column_list();
     let table_name = field_processor.get_table_name();
     let primary_key = field_processor.get_primary_key();
 
+    //prepare a field names list for the get_field_names function
+    let field_names = field_processor.get_field_names();
+
     //generate the sql string
     let sql_str = create_table_sql_str(&column_list, &table_name, &primary_key);
 
     //generate the code to implement the CreateTable trait
     let expand = quote!{
-        //implement a function to return the sql string
-        impl #struct_ident {
+        
+        impl #impl_generics #struct_ident #ty_generics #where_clausre {
+            /// Return the sql string of the create table statement
             pub fn create_table_sql(&self) -> &'static str {
                 #sql_str
             }
+            
+            /// Return the all the field names of the struct
+            /// # Note 
+            /// the primary key's field name will be the first one in the list.
+            fn get_field_names(&self) -> Vec<&'static str> {
+                vec![#(#field_names), *]
+            } 
         }
 
-        //implement a function to insert sql data to the database
-        impl #struct_ident {
-           
-        }
+      
     };
 
     expand.into()

@@ -1,6 +1,5 @@
-use syn::{DeriveInput, Field, Data};
-use std::any::Any;
-use std::sync::Arc;
+use syn::{DeriveInput, Field, Data, Generics};
+
 
 use crate::database_config::get_mapper; 
 use crate::TypeMapper;
@@ -17,8 +16,10 @@ pub struct FieldProcessor {
     primary_key: (String, String),    
     //ignore the fields that are not used in the table or sql statement
     ignore_fields_name: Vec<String>,
-    //parmeters for the database connection
-    //parms: Vec<Arc<dyn Any + Send + Sync>>,
+    //the generics lifetime parameters and closures of the struct
+    generics: Generics,
+
+
 }
 
 
@@ -61,6 +62,9 @@ impl FieldProcessor {
         //this is the mapper to map the rust type into sql type for your specific database
         let mapper = get_mapper();
 
+        //----extract the generics, lifetime parameters and closures------------
+        let generics = input.generics.clone();
+       
 
         //------------------iter the fields to figure out the primary key field------------
         let fields = match & input.data {
@@ -158,6 +162,7 @@ impl FieldProcessor {
             struct_ident,
             primary_key,
             ignore_fields_name,
+            generics,
         }
         
     }
@@ -212,6 +217,29 @@ impl FieldProcessor {
             .collect::<Vec<(String, String)>>()
     }
 
+    /// get generics of the struct
+    pub fn get_generics(&self) -> &Generics {
+        &self.generics
+    }
+
+    /// get the name list of the fields.
+    /// we can use this list to prevent the sql injection attack.
+    pub fn get_field_names(&self) -> Vec<String> {
+        let mut list  = Vec::new();
+        
+        //add the primary key field name to the list
+        let primary_field_name = self.get_primary_key().0;
+        list.push(primary_field_name);
+
+        //the column list without the primary key field
+        self.get_column_list().iter().for_each(
+            |(name, _)| {
+                list.push(name.clone());
+            }
+        );
+        list
+    }
+
 }
 
 
@@ -253,12 +281,11 @@ mod tests {
         assert_eq!(fields.len(), 3);
 
         //the ident will be converted to lower case
-        assert_eq!(table_name, "test_struct");    
+        assert_eq!(table_name, "teststruct");    
 
         assert_eq!(primary_key.0, "id".to_string());
-        assert_eq!(ignore_fields_name.len(), 2);
-        assert_eq!(ignore_fields_name[0], "name");
-        assert_eq!(ignore_fields_name[1], "age");
+        assert_eq!(ignore_fields_name.len(), 1);
+        assert_eq!(ignore_fields_name[0], "age");
 
     }
 
@@ -273,6 +300,19 @@ mod tests {
         assert_eq!(column_list[0].0, "name");
         assert_eq!(column_list[0].1, "TEXT");
 
+    }
+
+    #[test]
+    fn test_get_field_names() {
+        let input = gen_test_token_stream();
+
+        let field_processor = FieldProcessor::new(&input);
+        let field_names = field_processor.get_field_names();
+
+        assert_eq!(field_names.len(), 2);
+        assert_eq!(field_names[1], "name");
+        //the priamary key field name is always at first place .
+        assert_eq!(field_names[0], "id");
     }
   
   

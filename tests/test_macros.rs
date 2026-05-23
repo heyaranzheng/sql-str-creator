@@ -1,7 +1,7 @@
 // tests/test_macro.rs
-use sql_str_creator::CreateTable;
+use gen_sql_statement::SqlStatement;
 
-#[derive(CreateTable)]
+#[derive(SqlStatement)]
 struct User {
     #[primary_key]
     id: i32,
@@ -9,7 +9,7 @@ struct User {
     age: i32,
 }
 
-#[derive(CreateTable)]
+#[derive(SqlStatement)]
 struct Product {
     sku: String,
     price: f32,
@@ -47,4 +47,18 @@ fn test_create_table_without_primary_key() {
     assert!(sql.contains("CREATE TABLE IF NOT EXISTS"));
     assert!(sql.contains("product"));
     assert!(sql.contains("id")); 
+}
+
+#[test]
+fn test_get_field_names() {
+    let user = User{
+        id: 1,
+        name: "aran".to_string(),
+        age: 20,
+    };
+    let field_names = user.get_field_names();
+    println!("Field names: {:?}", field_names);
+
+    assert_eq!(field_names, vec!["id", "name", "age"]);
+
 }
