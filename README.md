@@ -1,9 +1,6 @@
 # This macro generates SQL statements from rust structs
 
-
-
 **This is a tool for my private project, so it supports Sqlite first. Some features may not be available for PostgreSQL. I do  not recommend you using this  crate if you are using PostgreSQL as your database.**
-
 
 * add this crate to your project:`cargo add gen-sql-sta`
 * create your structure with `#[derive(SqlSta)]`,  you can use `#[primary_key]` to mark a field as your primary key.
@@ -13,7 +10,7 @@
 
 ```
 // test struct, it works if you have used generics and where clause too.
-#[derive(SqlSta)]
+#[derive(SqlStatement)]
 struct Test {
   #[primary_key]
   id: u32,
@@ -25,7 +22,6 @@ struct Test {
 ```
 
 * We can use the implemented funtions to get the SQL statements if we have a object test, like this: `test.create_table_sql()`
-
 
 ```
 let test = Test {
@@ -51,7 +47,6 @@ println!("{:?}", sql_statement);
 `get_field_names(&self)`:  get your names of your structure's field.    ->`Vec<&'static str>`
 
 ,e.g: `vec!["id", "name", "age"]`
-
 
 * The table name will always be the struct indent with all lowercase.
   'test' is the table name of `struct Test{ /*... */}`, not 'Test'
