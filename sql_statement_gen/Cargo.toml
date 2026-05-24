@@ -1,0 +1,14 @@
+[package]
+name = "sql_statement_gen"
+version = "0.0.1"
+authors = ["Aran Z <heyaranzheng@hotmail.com>"]
+edition = "2024"
+license = "MIT"  
+repository = "https://github.com/heyaranzheng/gen-sql-statement"
+keywords = ["sql","statement", "proc-macro", "database"]
+description = "A simple macro to generate a specific SQL statement when we have a structure. Support SQLite first"
+
+[dependencies]
+sql_statement_trait = {version = "0.0.1", path = "../sql_statement_trait"}
+sql_statement_derive = {version = "0.0.1", path = "../sql_statement_derive"}
+
