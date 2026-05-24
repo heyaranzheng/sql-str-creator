@@ -2,14 +2,17 @@
 
 **This is a tool for my private project, so it supports Sqlite first. Some features may not be available for PostgreSQL. I do  not recommend you using this  crate if you are using PostgreSQL as your database.**
 
-* add this crate to your project:`cargo add gen-sql-sta`
-* create your structure with `#[derive(SqlSta)]`,  you can use `#[primary_key]` to mark a field as your primary key.
+* add this crate to your project:`cargo add sql_statement_gen`
+* create your structure with `#[derive(SqlStatement)]`,  you can use `#[primary_key]` to mark a field as your primary key.
   The field  marked `#[ignore]` will be ignored when you generate a sql statement or something realtive to it.
 * **If no field is marked with `#[primary key]` ,  macro will attempt to use  a field  name of "id" as a primary key. If "id" was already used by another field, it will fall back to "autoincrement".**
   **If neither "id" or "autoincrement" is avaliable. The macro will panic immediately.**
 
 ```
 // test struct, it works if you have used generics and where clause too.
+
+use sql_statement_gen::SqlStatement;
+
 #[derive(SqlStatement)]
 struct Test {
   #[primary_key]
@@ -40,17 +43,18 @@ println!("{:?}", sql_statement);
 
 ```
 
-## Function Lists
+## Trait SqlStatement
 
-`create_table_sql(&self)`:  the sql statement to create a table.      -> something like:`CREATE TABLE IF NOT EXISTS ......`
+```
 
-`get_field_names(&self)`:  get your names of your structure's field.    ->`Vec<&'static str>`
-
-,e.g: `vec!["id", "name", "age"]`
-
-* The table name will always be the struct indent with all lowercase.
-  'test' is the table name of `struct Test{ /*... */}`, not 'Test'
-* If you don't use
+pub trait SqlStatement {
+    /// Return the sql string of the create table statement for the given structure.
+    fn create_table_sql(&self) -> &'static str;
+    /// Return the field names of the structure, the primary key field always at the first position.
+    fn get_field_names(&self) -> Vec<&'static str>;
+  
+}
+```
 
 ## The Type Transformation From Rust to Sqlite
 
