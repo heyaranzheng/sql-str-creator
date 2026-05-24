@@ -1,6 +1,6 @@
 // tests/test_macro.rs
-use gen_sql_statement_derive::SqlStatement;
-use gen_sql_statement_trait::SqlStatement;
+use sql_statement_derive::SqlStatement;
+use sql_statement_trait::SqlStatement;
 
 
 #[derive(SqlStatement)]

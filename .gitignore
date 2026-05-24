@@ -2,10 +2,10 @@
 # will have compiled files and executables
 /debug
 /target/
-gen-sql-statement-trait/target/
-gen-sql-statement-trait/debug
-gen-sql-statement-derive/debug/
-gen-sql-statement-derive/target/
+sql-statement-trait/target/
+sql-statement-trait/debug
+sql-statement-derive/debug/
+sql-statement-derive/target/
 gen-sql-statement/debug/
 gen-sql-statement/target/
 

@@ -1,6 +1,6 @@
 [package]
 name = "sql_statement_derive"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2024"
 description = "derive macro for generating SQL statements, add crate 'sql_statement' instead"
 license = "MIT"
@@ -11,7 +11,8 @@ proc-macro = true
 
 
 [dependencies]
-sql_statement_trait = {version = "0.0.1", path = "../sql_statement_trait" }
+sql_statement_trait = {version = "0.0.2", path = "../sql_statement_trait" }
+
 quote = "1.0"
 proc-macro2 = "1.0"
 rusqlite = "0.39.0"

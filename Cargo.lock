@@ -55,29 +55,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
-name = "gen_sql_statement"
-version = "0.0.1"
-dependencies = [
- "gen_sql_statement_derive",
- "gen_sql_statement_trait",
-]
-
-[[package]]
-name = "gen_sql_statement_derive"
-version = "0.0.1"
-dependencies = [
- "gen_sql_statement_trait",
- "proc-macro2",
- "quote",
- "rusqlite",
- "syn 1.0.109",
-]
-
-[[package]]
-name = "gen_sql_statement_trait"
-version = "0.0.1"
-
-[[package]]
 name = "hashbrown"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -188,6 +165,29 @@ name = "smallvec"
 version = "1.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
+
+[[package]]
+name = "sql_statement_derive"
+version = "0.0.2"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "rusqlite",
+ "sql_statement_trait",
+ "syn 1.0.109",
+]
+
+[[package]]
+name = "sql_statement_gen"
+version = "0.0.2"
+dependencies = [
+ "sql_statement_derive",
+ "sql_statement_trait",
+]
+
+[[package]]
+name = "sql_statement_trait"
+version = "0.0.2"
 
 [[package]]
 name = "sqlite-wasm-rs"

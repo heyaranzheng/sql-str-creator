@@ -1,4 +1,4 @@
 [workspace]
-members = ["gen_sql_statement", "gen_sql_statement_trait", "gen_sql_statement_derive"]
+members = ["sql_statement_gen", "sql_statement_trait", "sql_statement_derive"]
 resolver = "3"
 
