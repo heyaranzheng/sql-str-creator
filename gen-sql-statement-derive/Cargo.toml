@@ -2,6 +2,9 @@
 name = "gen-sql-statement-derive"
 version = "0.0.1"
 edition = "2024"
+description = "derive macro for generating SQL statements, add crate 'gen-sql-statement' instead"
+license = "MIT"
+repository = "https://github.com/aranair/gen-sql-statement"
 
 [lib]
 proc-macro = true
