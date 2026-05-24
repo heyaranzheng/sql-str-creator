@@ -1,5 +1,5 @@
 [package]
-name = "gen-sql-statement"
+name = "gen_sql_statement"
 version = "0.0.1"
 authors = ["Aran Z <heyaranzheng@hotmail.com>"]
 edition = "2024"
@@ -8,14 +8,8 @@ repository = "https://github.com/heyaranzheng/gen-sql-statement"
 keywords = ["sql","statement", "proc-macro", "database"]
 description = "A simple macro to generate a specific SQL statement when we have a structure. Support SQLite first"
 
-[dev-dependencies]
-gen-sql-statement-trait = {version = "0.0.1", path = "../gen-sql-statement-trait"}
-gen-sql-statement-derive = {version = "0.0.1", path = "../gen-sql-statement-derive"}
+[dependencies]
+gen_sql_statement_trait = {version = "0.0.1", path = "../gen_sql_statement_trait"}
+gen_sql_statement_derive = {version = "0.0.1", path = "../gen_sql_statement_derive"}
 
 
-[features]
-default = ["only-for-sqlite"]
-#default = ["only-for-postgres"]
-
-only-for-postgres = []
-only-for-sqlite = []

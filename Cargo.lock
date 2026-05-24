@@ -55,25 +55,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
-name = "gen-sql-statement"
+name = "gen_sql_statement"
 version = "0.0.1"
 dependencies = [
- "gen-sql-statement-derive",
- "gen-sql-statement-trait",
+ "gen_sql_statement_derive",
+ "gen_sql_statement_trait",
 ]
 
 [[package]]
-name = "gen-sql-statement-derive"
+name = "gen_sql_statement_derive"
 version = "0.0.1"
 dependencies = [
- "gen-sql-statement-trait",
+ "gen_sql_statement_trait",
  "proc-macro2",
  "quote",
  "rusqlite",
+ "syn 1.0.109",
 ]
 
 [[package]]
-name = "gen-sql-statement-trait"
+name = "gen_sql_statement_trait"
 version = "0.0.1"
 
 [[package]]
@@ -202,6 +203,17 @@ dependencies = [
 
 [[package]]
 name = "syn"
+version = "1.0.109"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72b64191b275b66ffe2469e8af2c1cfe3bafa67b529ead792a6d0160888b4237"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
+]
+
+[[package]]
+name = "syn"
 version = "2.0.117"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e665b8803e7b1d2a727f4023456bbbbe74da67099c585258af0ad9c5013b9b99"
@@ -228,7 +240,7 @@ checksum = "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn",
+ "syn 2.0.117",
 ]
 
 [[package]]
@@ -275,7 +287,7 @@ dependencies = [
  "bumpalo",
  "proc-macro2",
  "quote",
- "syn",
+ "syn 2.0.117",
  "wasm-bindgen-shared",
 ]
 

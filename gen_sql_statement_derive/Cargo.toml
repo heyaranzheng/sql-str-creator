@@ -1,7 +1,7 @@
 [package]
-name = "gen-sql-statement-derive"
+name = "gen_sql_statement_derive"
 version = "0.0.1"
-edition = "2024"
+edition = "2021"
 description = "derive macro for generating SQL statements, add crate 'gen-sql-statement' instead"
 license = "MIT"
 repository = "https://github.com/aranair/gen-sql-statement"
@@ -11,7 +11,13 @@ proc-macro = true
 
 
 [dependencies]
-gen-sql-statement-trait = {version = "0.0.1", path = "../gen-sql-statement-trait" }
+gen_sql_statement_trait = {version = "0.0.1", path = "../gen_sql_statement_trait" }
 quote = "1.0"
 proc-macro2 = "1.0"
 rusqlite = "0.39.0"
+syn = "1.0.86"
+
+[features]
+default = ["only-for-sqlite"]
+only-for-sqlite = []
+only-for-postgresql = []

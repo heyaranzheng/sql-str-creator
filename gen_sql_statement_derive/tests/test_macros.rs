@@ -1,10 +1,13 @@
 // tests/test_macro.rs
-use gen_sql_statement::SqlStatement;
+use gen_sql_statement_derive::SqlStatement;
+use gen_sql_statement_trait::SqlStatement;
+
 
 #[derive(SqlStatement)]
 struct User {
     #[primary_key]
     id: i32,
+    
     name: String,
     age: i32,
 }
