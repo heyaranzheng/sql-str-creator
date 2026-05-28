@@ -4,7 +4,7 @@ version = "0.0.2"
 edition = "2024"
 description = "derive macro for generating SQL statements, add crate 'sql_statement' instead"
 license = "MIT"
-repository = "https://github.com/heyaranzheng/gen-sql-statement"
+repository = "https://github.com/heyaranzheng/sql-statement-gen"
 
 [lib]
 proc-macro = true

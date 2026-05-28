@@ -1,9 +1,8 @@
 use sql_statement_gen::SqlStatement;
 
 
-#[derive(SqlStatement)]
 struct MyStruct {
-    field1: i32,
+    pub field1: i32,
     field2: String,
 }
 

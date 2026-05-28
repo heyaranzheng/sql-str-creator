@@ -3,23 +3,46 @@ use super::*;
 
 use crate::database_config::DATABASE_PALCE_HOLDER;
 
-pub fn gen_inser_sql_str(
+
+
+
+pub  fn gen_insert_sql_statement(
+    table_name: String,
+    primary_key: (String, String),
     column_list: &Vec<(String, String)>,
-    table_name: &str,
-    primary_key: (String, String)
+    user_list_index: Option<&Vec<usize>>,
 ) -> String {
+    //we create a chain list, it's a iterator. We  can iterate over it by for loop.
+    let list = 
+        std::iter::once(&primary_key).chain(column_list.iter());
+    
+    //all the insert field names
+    let mut insert_field_names: Vec<&str> = Vec::new();
+
+    //if we have a user  list, we need to filter the field names.
+    if let Some(indexs) = user_list_index {
+        let mut  counter: usize = 0;
+        for (name, _) in list {
+            if counter == indexs[counter] {
+                insert_field_names.push(&name);
+            } 
+            counter += 1;
+        }
+    }else {
+        //we don't have a user list, we need to get all the field names. We use all the column list.
+        insert_field_names = column_list.iter().map(|(name, _)| name.as_str()).collect();
+    }
     
     //ret: "INSERT INTO"
     let mut ret = String::from("INSERT INTO ");
 
     //ret: "INSERT INTO 'table_name'"
-    ret.push_str(table_name);
+    ret.push_str(&table_name);
 
     //add a '(' and the primary key at the first palce.
     //ret may like this if you set id as primary key for example:
     // "INSERT INTO 'table_name' ( id, name, age) " 
-    // if you not we will add an default primary key like 'id' or 'autoincrement'
-    let mut str =  format!("( {}, {} )", primary_key.0, gen_field_name_str(column_list) );
+    let mut str =  format!("( {} )", gen_field_name_str(&insert_field_names));
     ret.push_str(&str);
 
     
@@ -27,7 +50,7 @@ pub fn gen_inser_sql_str(
     //add the value list
     //ret may be like this : "INSERT INTO 'table_name' (id, name, age) VALUES (?1, ?2, ?3)" for
     //sqlite.
-    str = format!(" VALUES ({})", gen_value_list(column_list));
+    str = format!(" VALUES ({})", gen_value_list(&insert_field_names));
     ret.push_str(&str);
 
     
@@ -39,17 +62,17 @@ pub fn gen_inser_sql_str(
 /// " name, age" 
 /// # Note
 ///  this will IGNORE the primary key field and the field marked with ignore.
-fn gen_field_name_str(column_list: &Vec<(String, String)>) -> String {
+fn gen_field_name_str(list: &Vec<&str>) -> String {
     let mut ret = String::new();
-    let len = column_list.len();
-    let mut _temp = String::new();
+    let len = list.len();
+    let mut  _temp = String::new();
     for i in 0 .. (len - 1) {
-        _temp = format!(" {}, ", column_list[i].0);
+        _temp = format!(" {}, ", list[i]);
         ret.push_str(&_temp);
     }
 
     //leave the last field name without comma
-    ret.push_str(&column_list[len - 1].0);
+    ret.push_str(&list[len - 1]);
 
     ret
 }
@@ -57,11 +80,11 @@ fn gen_field_name_str(column_list: &Vec<(String, String)>) -> String {
 /// function to generate string like " ?1, ?2, ?3" with a given column list, if you set
 /// feature "only-for-sqlite".
 /// For postgres, it will be like " $1, $2, $3"
-fn gen_value_list(column_list: &Vec<(String, String)>) -> String {
+fn gen_value_list(list: &Vec<&str>) -> String {
     let mut ret = String::new();
-    let len = column_list.len();
+    let len = list.len();
     let mut _temp = String::new();
-    
+
     //we need to remain a placeholder for the primary key field. So we need to add 1 to the
     //length of the column list.
     for i in 0 .. len  {
@@ -79,7 +102,7 @@ fn gen_value_list(column_list: &Vec<(String, String)>) -> String {
 #[cfg(test)]
 mod tests{
     use super::*;
-
+    use crate::field_processor::FieldProcessor;
     use syn::parse_quote;
   
     /// parse the test struct, and return some objects for test.
@@ -122,8 +145,8 @@ mod tests{
     #[test]
     fn test_gen_field_name_str() {
         let (_, column_list, _, _) = gen_test_token_stream();
-        
-        let field_name_str = gen_field_name_str(&column_list);
+        let  list = column_list.iter().map(|(name, _)| name.as_str()).collect();
+        let field_name_str = gen_field_name_str(&list);
         assert_eq!(field_name_str, " height, weight");
 
     }
@@ -134,7 +157,12 @@ mod tests{
             table_name, primary_key
         ) = gen_test_token_stream();
 
-        let str = gen_inser_sql_str(&column_list, &table_name, primary_key);
+        let str = gen_insert_sql_statement(
+            table_name,
+            primary_key,
+            &column_list,
+            None
+        );
         println!("{}", str);
     }
 }

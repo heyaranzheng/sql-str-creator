@@ -2,6 +2,7 @@ mod type_mapper;
 mod field_processor;
 mod database_config;
 mod gen_sql_str;
+mod where_clause;
 
 use quote::{ToTokens, quote};
 use syn::{ Data, DeriveInput, Field, Fields, parse_macro_input, Type };
@@ -22,7 +23,8 @@ use gen_sql_str::{
 /// 
 /// # Example
 /// ```rust
-/// use sql_str_creator::SqlStatement;
+/// use sql_statement_trait::SqlStatement;
+/// use sql_statement_derive::SqlStatement;
 /// 
 /// #[derive(SqlStatement)]
 /// struct User {
@@ -33,8 +35,15 @@ use gen_sql_str::{
 ///     age: i32,
 /// }
 /// 
+/// let user = User{
+///     id: 1,
+///     name: "aran".to_string(),
+///     age: 20,
+/// };
+/// 
+/// 
 /// // SQL is already generated at compile time!
-/// println!("{}", User::create_table_sql());
+/// println!("{}", user.create_table_sql());
 /// ```
 /// The output may be: CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, age INTEGER);
 /// 
@@ -87,6 +96,20 @@ pub fn derive_create_table(input: proc_macro::TokenStream) -> proc_macro::TokenS
             fn get_field_names(&self) -> Vec<&'static str> {
                 vec![#(#field_names), *]
             } 
+
+            fn insert_sql_statemenet(&self, user_list: Vec<&'static str>) 
+            -> Result<&'static str, ::sql_statement_trait::Error> 
+            {
+                //check the user's field list, if it contains invalid field name, panic
+                //get_field_positions will return a error if the field name is invalid.  
+                self.get_field_positions(user_list)?;
+
+                //
+
+
+            }
+
+            
         }
 
       

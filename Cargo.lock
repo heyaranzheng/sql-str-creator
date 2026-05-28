@@ -188,6 +188,9 @@ dependencies = [
 [[package]]
 name = "sql_statement_trait"
 version = "0.0.2"
+dependencies = [
+ "rusqlite",
+]
 
 [[package]]
 name = "sqlite-wasm-rs"
